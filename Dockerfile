@@ -1,45 +1,45 @@
 FROM php:7.4-apache
 
-# Install system dependencies
+# Mise à jour du système et installation des dépendances système équivalentes à ton playbook Ansible
 RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev \
-    libxml2-dev libzip-dev unzip git curl \
-    libonig-dev libmcrypt-dev libldap2-dev \
-    libssl-dev libcurl4-openssl-dev \
-    libicu-dev zlib1g-dev zip \
-    && docker-php-ext-install pdo pdo_mysql mysqli xml mbstring intl zip soap gd bcmath opcache \
-    && docker-php-ext-configure gd --with-jpeg --with-freetype \
-    && a2enmod rewrite
+    git \
+    unzip \
+    curl \
+    libapache2-mod-php7.4 \
+    php7.4 \
+    php7.4-cli \
+    php7.4-mysql \
+    php7.4-xml \
+    php7.4-mbstring \
+    php7.4-curl \
+    php7.4-zip \
+    php7.4-intl \
+    php7.4-gd \
+    php7.4-soap \
+    php7.4-bcmath \
+    php7.4-json \
+    php7.4-opcache \
+    php7.4-ldap \
+    && apt-get clean
 
-# Set working directory
-WORKDIR /var/www/html
+# Activer les modules Apache nécessaires
+RUN a2enmod rewrite
 
-# Copy Elgg project files (use this if cloning locally during build)
+# Copier le code source Elgg dans le conteneur
+WORKDIR /var/www/html/elgg
 COPY . .
 
-# OR if you want Docker to clone the repo during build, replace COPY with:
-# RUN git clone -b 3.3 https://github.com/BitaouiOussama/Elgg.git /var/www/html
+# Installer Composer via apt comme dans ton playbook
+RUN apt-get update && apt-get install -y composer
 
-# Install composer globally
-RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer
-
-# Install PHP dependencies
+# Installer les dépendances PHP sans les dev, scripts ou output inutile
 RUN composer install --no-dev --no-scripts --no-progress --optimize-autoloader
 
-# Create data folder
-RUN mkdir -p /var/elgg_data && \
-    chown -R www-data:www-data /var/elgg_data /var/www/html && \
-    chmod -R 777 /var/elgg_data
+# Donner les bons droits
+RUN chown -R www-data:www-data /var/www/html/elgg
 
-# Apache config: Ensure AllowOverride All for .htaccess
-RUN echo "<Directory /var/www/html/> \
-    AllowOverride All \
-    Require all granted \
-</Directory>" >> /etc/apache2/apache2.conf
-
-# Expose HTTP port
+# Exposer le port web
 EXPOSE 80
 
-# Start Apache
+# Lancer Apache en mode non détaché
 CMD ["apache2-foreground"]
