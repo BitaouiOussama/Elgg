@@ -42,7 +42,8 @@ WORKDIR /var/www/html/elgg
 COPY . .
 
 # Installer Composer (via installation officielle recommandée)
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer self-update --1
 
 # Installer les dépendances PHP avec Composer
 RUN composer install --no-dev --no-scripts --no-progress --optimize-autoloader
