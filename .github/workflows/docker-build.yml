@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build and Push Elgg Docker Image
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-and-push:
+  docker-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +24,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --no-cache -t ${{ secrets.DOCKERHUB_USERNAME }}/elgg-app:latest .
+          docker build --no-cache \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/elgg-app:latest \
+            .
 
       - name: Push Docker image to DockerHub
         run: |
