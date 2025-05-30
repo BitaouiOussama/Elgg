@@ -25,9 +25,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Pull previous image for cache (ignore error if image does not exist)
         run: |
-          docker build --no-cache \
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/elgg-app:latest || true
+
+      - name: Build Docker image using cache
+        run: |
+          docker build \
+            --cache-from=${{ secrets.DOCKERHUB_USERNAME }}/elgg-app:latest \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/elgg-app:latest \
             .
 
