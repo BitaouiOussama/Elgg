@@ -8,36 +8,30 @@ services:
       - db
     ports:
       - "80:80"
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
+    env_file:
+      - secrets.env
     volumes:
-      - /var/elgg_data:/var/www/html/elgg/data
+      - elgg_data:/var/www/html/elgg/data
+    restart: unless-stopped
 
   db:
     image: mariadb:10.5
     container_name: elgg-db
-    restart: always
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    restart: unless-stopped
+    env_file:
+      - secrets.env
     volumes:
       - db_data:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: elgg-phpmyadmin
-    restart: always
+    restart: unless-stopped
     ports:
       - "8080:80"
-    environment:
-      - PMA_HOST=${PMA_HOST}
-      - PMA_USER=${PMA_USER}
-      - PMA_PASSWORD=${PMA_PASSWORD}
+    env_file:
+      - secrets.env
 
 volumes:
   db_data:
+  elgg_data:
