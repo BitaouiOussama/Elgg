@@ -5,6 +5,12 @@ on:
     branches:
       - master
 
+    paths:
+      - 'Dockerfile'
+      - 'src/**'
+      - '000-default.conf'
+      - 'docker-compose.yml'
+
 permissions:
   contents: read
 
