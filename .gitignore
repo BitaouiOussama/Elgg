@@ -6,6 +6,8 @@
 /composer.phar
 /cache
 
+#ignore the .env file
+.env
 # don't ignore example settings
 !/elgg-config/settings.example.php
 

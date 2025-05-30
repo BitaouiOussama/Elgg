@@ -9,7 +9,7 @@ services:
     ports:
       - "80:80"
     env_file:
-      - secrets.env
+      - .env
     volumes:
       - elgg_data:/var/www/html/elgg/data
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
     ports:
       - "8080:80"
     env_file:
-      - secrets.env
+      - .env
 
 volumes:
   db_data:
