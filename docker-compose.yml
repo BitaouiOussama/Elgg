@@ -19,7 +19,7 @@ services:
     container_name: elgg-db
     restart: unless-stopped
     env_file:
-      - secrets.env
+      - .env
     volumes:
       - db_data:/var/lib/mysql
 
