@@ -11,7 +11,7 @@ services:
     env_file:
       - .env
     volumes:
-      - elgg_data:/var/elgg_data
+      - /var/elgg_data:/var/elgg_data
     restart: unless-stopped
 
   db:
